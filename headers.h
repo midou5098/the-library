@@ -161,7 +161,7 @@ void uinter::layout(int mode){
         TTF_Font *font=sdl.getFont();
         SDL_Renderer* renderer=sdl.getrender();
         SDL_Color black = {0,0,0,255};
-        SDL_Surface* surf=TTF_RenderText_Solid(font," book name type shi? : ",black);
+        SDL_Surface* surf=TTF_RenderText_Solid(font," book name  : ",black);
         int tw = surf->w;
         int th = surf->h;
         SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
@@ -171,7 +171,7 @@ void uinter::layout(int mode){
         SDL_DestroyTexture(tex);
         sdl.drawtextarea(570,190,200,40,0,0,0);
         
-        SDL_Surface* surf2=TTF_RenderText_Solid(font," book author type shi? : ",black);
+        SDL_Surface* surf2=TTF_RenderText_Solid(font," book author  : ",black);
         SDL_Texture* tex2=SDL_CreateTextureFromSurface(renderer,surf2);
         int tw2 = surf2->w;
         int th2 = surf2->h;
@@ -183,7 +183,7 @@ void uinter::layout(int mode){
         sdl.drawtextarea(570,290,200,40,0,0,0);
 
         
-        SDL_Surface* surf3=TTF_RenderText_Solid(font," book pages type shi? : ",black);
+        SDL_Surface* surf3=TTF_RenderText_Solid(font," book pages  : ",black);
         SDL_Texture* tex3=SDL_CreateTextureFromSurface(renderer,surf3);
         int tw3 = surf3->w;
         int th3 = surf3->h;
@@ -227,9 +227,507 @@ void uinter::layout(int mode){
             SDL_DestroyTexture(tex33);
         }
     }else if (mode==11){
-        
+        TTF_Font *font=sdl.getFont();
+        SDL_Renderer* renderer=sdl.getrender();
+        SDL_Color black = {0,0,0,255};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," book name  : ",black);
+        int tw = surf->w;
+        int th = surf->h;
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_Rect rect={350,200,tw,th};
+        SDL_RenderCopy(renderer,tex,NULL,&rect);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        sdl.drawtextarea(570,190,200,40,0,0,0);    
+    
+    
+        if(!s1.empty()){
+            SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
+            SDL_Texture* tex11=SDL_CreateTextureFromSurface(renderer,surf11);
+            int tw11 = surf11->w;
+            int th11 = surf11->h;
+            SDL_Rect rect11={575,200,tw11,th11};
+            SDL_RenderCopy(renderer,tex11,NULL,&rect11);
+            SDL_FreeSurface(surf11);
+            SDL_DestroyTexture(tex11);
+        }
+    }else if (mode==12){
+        TTF_Font *font=sdl.getFont();
+        SDL_Renderer* renderer=sdl.getrender();
+        SDL_Color black = {0,0,0,255};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," book name  : ",black);
+        int tw = surf->w;
+        int th = surf->h;
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_Rect rect={350,200,tw,th};
+        SDL_RenderCopy(renderer,tex,NULL,&rect);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        sdl.drawtextarea(570,190,200,40,0,0,0);    
+    
+    
+        if(!s1.empty()){
+            SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
+            SDL_Texture* tex11=SDL_CreateTextureFromSurface(renderer,surf11);
+            int tw11 = surf11->w;
+            int th11 = surf11->h;
+            SDL_Rect rect11={575,200,tw11,th11};
+            SDL_RenderCopy(renderer,tex11,NULL,&rect11);
+            SDL_FreeSurface(surf11);
+            SDL_DestroyTexture(tex11);
+        }
+    }else if (mode==13){
+        TTF_Font *font=sdl.getFont();
+        SDL_Renderer* renderer=sdl.getrender();
+        SDL_Color black = {0,0,0,255};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," book name  : ",black);
+        int tw = surf->w;
+        int th = surf->h;
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_Rect rect={350,200,tw,th};
+        SDL_RenderCopy(renderer,tex,NULL,&rect);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        sdl.drawtextarea(570,190,200,40,0,0,0);    
+    
+    
+        if(!s1.empty()){
+            SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
+            SDL_Texture* tex11=SDL_CreateTextureFromSurface(renderer,surf11);
+            int tw11 = surf11->w;
+            int th11 = surf11->h;
+            SDL_Rect rect11={575,200,tw11,th11};
+            SDL_RenderCopy(renderer,tex11,NULL,&rect11);
+            SDL_FreeSurface(surf11);
+            SDL_DestroyTexture(tex11);
+        }
     }
 
+
+
+
+
+
+    else if (mode==20){
+        TTF_Font *font=sdl.getFont();
+        SDL_Renderer* renderer=sdl.getrender();
+        SDL_Color black = {0,0,0,255};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," author name  : ",black);
+        int tw = surf->w;
+        int th = surf->h;
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_Rect rect={350,200,tw,th};
+        SDL_RenderCopy(renderer,tex,NULL,&rect);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        sdl.drawtextarea(570,190,200,40,0,0,0);
+        
+        SDL_Surface* surf2=TTF_RenderText_Solid(font," author age  : ",black);
+        SDL_Texture* tex2=SDL_CreateTextureFromSurface(renderer,surf2);
+        int tw2 = surf2->w;
+        int th2 = surf2->h;
+        SDL_Rect rect2={350,300,tw2,th2};
+        SDL_RenderCopy(renderer,tex2,NULL,&rect2);
+        SDL_FreeSurface(surf2);
+        SDL_DestroyTexture(tex2);
+        
+        sdl.drawtextarea(570,290,200,40,0,0,0);
+
+        
+        SDL_Surface* surf3=TTF_RenderText_Solid(font," author skin   : ",black);
+        SDL_Texture* tex3=SDL_CreateTextureFromSurface(renderer,surf3);
+        int tw3 = surf3->w;
+        int th3 = surf3->h;
+        SDL_Rect rect3={350,400,tw3,th3};
+        SDL_RenderCopy(renderer,tex3,NULL,&rect3);
+        SDL_FreeSurface(surf3);
+        SDL_DestroyTexture(tex3);
+        sdl.drawtextarea(570,390,200,40,0,0,0);
+
+        
+        if(!s1.empty()){
+            SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
+            SDL_Texture* tex11=SDL_CreateTextureFromSurface(renderer,surf11);
+            int tw11 = surf11->w;
+            int th11 = surf11->h;
+            SDL_Rect rect11={575,200,tw11,th11};
+            SDL_RenderCopy(renderer,tex11,NULL,&rect11);
+            SDL_FreeSurface(surf11);
+            SDL_DestroyTexture(tex11);
+            }
+
+        if(!s2.empty()){
+            SDL_Surface* surf22=TTF_RenderText_Solid(font,s2.c_str(),black);
+            SDL_Texture* tex22=SDL_CreateTextureFromSurface(renderer,surf22);
+            int tw22 = surf22->w;
+            int th22 = surf22->h;
+            SDL_Rect rect22={575,300,tw22,th22};
+            SDL_RenderCopy(renderer,tex22,NULL,&rect22);
+            SDL_FreeSurface(surf22);
+            SDL_DestroyTexture(tex22);
+        }
+
+        if(!s3.empty()){
+            SDL_Surface* surf33=TTF_RenderText_Solid(font,s3.c_str(),black);
+            SDL_Texture* tex33=SDL_CreateTextureFromSurface(renderer,surf33);
+            int tw33 = surf33->w;
+            int th33 = surf33->h;
+            SDL_Rect rect33={575,400,tw33,th33};
+            SDL_RenderCopy(renderer,tex33,NULL,&rect33);
+            SDL_FreeSurface(surf33);
+            SDL_DestroyTexture(tex33);
+        }
+    }else if (mode==21){
+        TTF_Font *font=sdl.getFont();
+        SDL_Renderer* renderer=sdl.getrender();
+        SDL_Color black = {0,0,0,255};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," author id  : ",black);
+        int tw = surf->w;
+        int th = surf->h;
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_Rect rect={350,200,tw,th};
+        SDL_RenderCopy(renderer,tex,NULL,&rect);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        sdl.drawtextarea(570,190,200,40,0,0,0);    
+    
+    
+        if(!s1.empty()){
+            SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
+            SDL_Texture* tex11=SDL_CreateTextureFromSurface(renderer,surf11);
+            int tw11 = surf11->w;
+            int th11 = surf11->h;
+            SDL_Rect rect11={575,200,tw11,th11};
+            SDL_RenderCopy(renderer,tex11,NULL,&rect11);
+            SDL_FreeSurface(surf11);
+            SDL_DestroyTexture(tex11);
+        }
+    }else if (mode==22){
+        TTF_Font *font=sdl.getFont();
+        SDL_Renderer* renderer=sdl.getrender();
+        SDL_Color black = {0,0,0,255};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," author id  : ",black);
+        int tw = surf->w;
+        int th = surf->h;
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_Rect rect={350,200,tw,th};
+        SDL_RenderCopy(renderer,tex,NULL,&rect);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        sdl.drawtextarea(570,190,200,40,0,0,0);    
+    
+    
+        if(!s1.empty()){
+            SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
+            SDL_Texture* tex11=SDL_CreateTextureFromSurface(renderer,surf11);
+            int tw11 = surf11->w;
+            int th11 = surf11->h;
+            SDL_Rect rect11={575,200,tw11,th11};
+            SDL_RenderCopy(renderer,tex11,NULL,&rect11);
+            SDL_FreeSurface(surf11);
+            SDL_DestroyTexture(tex11);
+        }
+    }else if (mode==23){
+        TTF_Font *font=sdl.getFont();
+        SDL_Renderer* renderer=sdl.getrender();
+        SDL_Color black = {0,0,0,255};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," author id  : ",black);
+        int tw = surf->w;
+        int th = surf->h;
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_Rect rect={350,200,tw,th};
+        SDL_RenderCopy(renderer,tex,NULL,&rect);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        sdl.drawtextarea(570,190,200,40,0,0,0);    
+    
+    
+        if(!s1.empty()){
+            SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
+            SDL_Texture* tex11=SDL_CreateTextureFromSurface(renderer,surf11);
+            int tw11 = surf11->w;
+            int th11 = surf11->h;
+            SDL_Rect rect11={575,200,tw11,th11};
+            SDL_RenderCopy(renderer,tex11,NULL,&rect11);
+            SDL_FreeSurface(surf11);
+            SDL_DestroyTexture(tex11);
+        }
+    }else if (mode==30){
+        TTF_Font *font=sdl.getFont();
+        SDL_Renderer* renderer=sdl.getrender();
+        SDL_Color black = {0,0,0,255};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," staff name  : ",black);
+        int tw = surf->w;
+        int th = surf->h;
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_Rect rect={350,200,tw,th};
+        SDL_RenderCopy(renderer,tex,NULL,&rect);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        sdl.drawtextarea(570,190,200,40,0,0,0);
+        
+        SDL_Surface* surf2=TTF_RenderText_Solid(font," staff age  : ",black);
+        SDL_Texture* tex2=SDL_CreateTextureFromSurface(renderer,surf2);
+        int tw2 = surf2->w;
+        int th2 = surf2->h;
+        SDL_Rect rect2={350,300,tw2,th2};
+        SDL_RenderCopy(renderer,tex2,NULL,&rect2);
+        SDL_FreeSurface(surf2);
+        SDL_DestroyTexture(tex2);
+        
+        sdl.drawtextarea(570,290,200,40,0,0,0);
+
+        
+        SDL_Surface* surf3=TTF_RenderText_Solid(font," staff position  : ",black);
+        SDL_Texture* tex3=SDL_CreateTextureFromSurface(renderer,surf3);
+        int tw3 = surf3->w;
+        int th3 = surf3->h;
+        SDL_Rect rect3={350,400,tw3,th3};
+        SDL_RenderCopy(renderer,tex3,NULL,&rect3);
+        SDL_FreeSurface(surf3);
+        SDL_DestroyTexture(tex3);
+        sdl.drawtextarea(570,390,200,40,0,0,0);
+
+        
+        if(!s1.empty()){
+            SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
+            SDL_Texture* tex11=SDL_CreateTextureFromSurface(renderer,surf11);
+            int tw11 = surf11->w;
+            int th11 = surf11->h;
+            SDL_Rect rect11={575,200,tw11,th11};
+            SDL_RenderCopy(renderer,tex11,NULL,&rect11);
+            SDL_FreeSurface(surf11);
+            SDL_DestroyTexture(tex11);
+            }
+
+        if(!s2.empty()){
+            SDL_Surface* surf22=TTF_RenderText_Solid(font,s2.c_str(),black);
+            SDL_Texture* tex22=SDL_CreateTextureFromSurface(renderer,surf22);
+            int tw22 = surf22->w;
+            int th22 = surf22->h;
+            SDL_Rect rect22={575,300,tw22,th22};
+            SDL_RenderCopy(renderer,tex22,NULL,&rect22);
+            SDL_FreeSurface(surf22);
+            SDL_DestroyTexture(tex22);
+        }
+
+        if(!s3.empty()){
+            SDL_Surface* surf33=TTF_RenderText_Solid(font,s3.c_str(),black);
+            SDL_Texture* tex33=SDL_CreateTextureFromSurface(renderer,surf33);
+            int tw33 = surf33->w;
+            int th33 = surf33->h;
+            SDL_Rect rect33={575,400,tw33,th33};
+            SDL_RenderCopy(renderer,tex33,NULL,&rect33);
+            SDL_FreeSurface(surf33);
+            SDL_DestroyTexture(tex33);
+        }
+    }else if (mode==31){
+        TTF_Font *font=sdl.getFont();
+        SDL_Renderer* renderer=sdl.getrender();
+        SDL_Color black = {0,0,0,255};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," staff name  : ",black);
+        int tw = surf->w;
+        int th = surf->h;
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_Rect rect={350,200,tw,th};
+        SDL_RenderCopy(renderer,tex,NULL,&rect);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        sdl.drawtextarea(570,190,200,40,0,0,0);    
+    
+    
+        if(!s1.empty()){
+            SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
+            SDL_Texture* tex11=SDL_CreateTextureFromSurface(renderer,surf11);
+            int tw11 = surf11->w;
+            int th11 = surf11->h;
+            SDL_Rect rect11={575,200,tw11,th11};
+            SDL_RenderCopy(renderer,tex11,NULL,&rect11);
+            SDL_FreeSurface(surf11);
+            SDL_DestroyTexture(tex11);
+        }
+    }else if (mode==32){
+        TTF_Font *font=sdl.getFont();
+        SDL_Renderer* renderer=sdl.getrender();
+        SDL_Color black = {0,0,0,255};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," staff name  : ",black);
+        int tw = surf->w;
+        int th = surf->h;
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_Rect rect={350,200,tw,th};
+        SDL_RenderCopy(renderer,tex,NULL,&rect);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        sdl.drawtextarea(570,190,200,40,0,0,0);    
+    
+    
+        if(!s1.empty()){
+            SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
+            SDL_Texture* tex11=SDL_CreateTextureFromSurface(renderer,surf11);
+            int tw11 = surf11->w;
+            int th11 = surf11->h;
+            SDL_Rect rect11={575,200,tw11,th11};
+            SDL_RenderCopy(renderer,tex11,NULL,&rect11);
+            SDL_FreeSurface(surf11);
+            SDL_DestroyTexture(tex11);
+        }
+    }else if (mode==33){
+        TTF_Font *font=sdl.getFont();
+        SDL_Renderer* renderer=sdl.getrender();
+        SDL_Color black = {0,0,0,255};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," staff name : ",black);
+        int tw = surf->w;
+        int th = surf->h;
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_Rect rect={350,200,tw,th};
+        SDL_RenderCopy(renderer,tex,NULL,&rect);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        sdl.drawtextarea(570,190,200,40,0,0,0);    
+    
+    
+        if(!s1.empty()){
+            SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
+            SDL_Texture* tex11=SDL_CreateTextureFromSurface(renderer,surf11);
+            int tw11 = surf11->w;
+            int th11 = surf11->h;
+            SDL_Rect rect11={575,200,tw11,th11};
+            SDL_RenderCopy(renderer,tex11,NULL,&rect11);
+            SDL_FreeSurface(surf11);
+            SDL_DestroyTexture(tex11);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 }
 void uinter::handel(SDL_Event& event,int& mode){
     if (mode==0){
@@ -314,12 +812,69 @@ void uinter::handel(SDL_Event& event,int& mode){
 
 
     }else if (mode == 11){
+        if (event.type==SDL_MOUSEBUTTONDOWN){
+            if (570<event.button.x && event.button.x<770){
+                if(200<event.button.y && event.button.y<240){
+                    focused=1;
+                }}}
+        if (focused!=-1){
+            if(event.type==SDL_KEYDOWN){
+                SDL_Keycode key=event.key.keysym.sym;
+                char c=(char)key;
+                if (key == SDLK_BACKSPACE) {
+                    if (focused==1 && !s1.empty())s1.pop_back();
+                }
+                else if(key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    
+                    focused=-1;
+                    mode=0;
+                    s1.clear();}
 
-    }
-}
+                if(focused==1 && s1.length()<20) s1+=c;}}}
+    else if (mode == 12){
+        if (event.type==SDL_MOUSEBUTTONDOWN){
+            if (570<event.button.x && event.button.x<770){
+                if(200<event.button.y && event.button.y<240){
+                    focused=1;
+                }}}
+        if (focused!=-1){
+            if(event.type==SDL_KEYDOWN){
+                SDL_Keycode key=event.key.keysym.sym;
+                char c=(char)key;
+                if (key == SDLK_BACKSPACE) {
+                    if (focused==1 && !s1.empty())s1.pop_back();
+                }
+                else if(key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    
+                    focused=-1;
+                    mode=0;
+                    s1.clear();}
 
-
-
+                if(focused==1 && s1.length()<20) s1+=c;}}}
+                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            }
+                
 
 
 
