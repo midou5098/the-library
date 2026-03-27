@@ -792,6 +792,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                     s1.clear();
                     s2.clear();
                     s3.clear();
+                    return;
 }
                 if (key>=32 && key<=126) {  
                     char c=(char)key;
@@ -806,7 +807,15 @@ void uinter::handel(SDL_Event& event,int& mode){
                 
                         }
                 
+        }if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    return;}
         }
+          
         
 
 
@@ -831,8 +840,130 @@ void uinter::handel(SDL_Event& event,int& mode){
                     mode=0;
                     s1.clear();}
 
-                if(focused==1 && s1.length()<20) s1+=c;}}}
+                if(focused==1 && s1.length()<20) s1+=c;}}
+        if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    return;}
+        }
+          }
     else if (mode == 12){
+        if (event.type==SDL_MOUSEBUTTONDOWN){
+            if (570<event.button.x && event.button.x<770){
+                if(200<event.button.y && event.button.y<240){
+                    focused=1;
+                }}}
+        if (focused!=-1){
+            if(event.type==SDL_KEYDOWN){
+                SDL_Keycode key=event.key.keysym.sym;
+                char c=(char)key;
+                if (key == SDLK_BACKSPACE) {
+                    if (focused==1 && !s1.empty())s1.pop_back();
+                }
+                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    s1.clear();
+                    return;}
+
+                if(focused==1 && s1.length()<20) s1+=c;}}
+        if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    return;}}
+    }else if (mode == 13){
+        if (event.type==SDL_MOUSEBUTTONDOWN){
+            if (570<event.button.x && event.button.x<770){
+                if(200<event.button.y && event.button.y<240){
+                    focused=1;
+                }}}
+        if (focused!=-1){
+            if(event.type==SDL_KEYDOWN){
+                SDL_Keycode key=event.key.keysym.sym;
+                char c=(char)key;
+                if (key == SDLK_BACKSPACE) {
+                    if (focused==1 && !s1.empty())s1.pop_back();
+                }
+                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    s1.clear();
+                    return;}
+
+                if(focused==1 && s1.length()<20) s1+=c;}}
+        if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    return;}}
+    }else if(mode==20){
+        if (event.type==SDL_MOUSEBUTTONDOWN){
+            if (570<event.button.x && event.button.x<770){
+                if(200<event.button.y && event.button.y<240){
+                    focused=1;
+                }else if(300<event.button.y && event.button.y<340){
+                    focused=2;
+                }else if(400<event.button.y && event.button.y<440){
+                    focused=3;
+            }
+        }}
+        if (focused!=-1){
+            if(event.type==SDL_KEYDOWN){
+                SDL_Keycode key=event.key.keysym.sym;
+                if (key == SDLK_BACKSPACE) {
+                    if (focused==1 && !s1.empty())s1.pop_back();
+                    else if (focused==2 && !s2.empty()) s2.pop_back();
+                    else if(focused==3 && !s3.empty()) s3.pop_back();
+                }
+                else if(key==SDLK_RETURN) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    s1.clear();
+                    s2.clear();
+                    s3.clear();
+                    return;
+}
+                if (key>=32 && key<=126) {  
+                    char c=(char)key;
+                    bool shift=(event.key.keysym.mod & KMOD_SHIFT);
+                    if (shift && c>='a' && c<= 'z') {
+                        c=toupper(c);
+                    }
+                    if(focused==1 && s1.length()<20) s1+=c;
+
+                else if(focused==2 && s2.length()<20) s2+=c;
+                else if(focused==3 && s3.length()<20) s3+=c;}
+                
+                        }
+                
+        }if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    s1.clear();
+                    s2.clear();
+                    s3.clear();
+                    return;}
+        }
+          
+        
+
+
+
+    }else if (mode == 21){
         if (event.type==SDL_MOUSEBUTTONDOWN){
             if (570<event.button.x && event.button.x<770){
                 if(200<event.button.y && event.button.y<240){
@@ -852,7 +983,224 @@ void uinter::handel(SDL_Event& event,int& mode){
                     mode=0;
                     s1.clear();}
 
-                if(focused==1 && s1.length()<20) s1+=c;}}}
+                if(focused==1 && s1.length()<20) s1+=c;}}
+        if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    s1.clear();
+                    s2.clear();
+                    s3.clear();
+                    return;}
+        }
+          }
+    else if (mode == 22){
+        if (event.type==SDL_MOUSEBUTTONDOWN){
+            if (570<event.button.x && event.button.x<770){
+                if(200<event.button.y && event.button.y<240){
+                    focused=1;
+                }}}
+        if (focused!=-1){
+            if(event.type==SDL_KEYDOWN){
+                SDL_Keycode key=event.key.keysym.sym;
+                char c=(char)key;
+                if (key == SDLK_BACKSPACE) {
+                    if (focused==1 && !s1.empty())s1.pop_back();
+                }
+                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    s1.clear();
+                    s1.clear();
+                    s2.clear();
+                    s3.clear();
+                    return;}
+
+                if(focused==1 && s1.length()<20) s1+=c;}}
+        if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    return;}}
+    }else if (mode == 23){
+        if (event.type==SDL_MOUSEBUTTONDOWN){
+            if (570<event.button.x && event.button.x<770){
+                if(200<event.button.y && event.button.y<240){
+                    focused=1;
+                }}}
+        if (focused!=-1){
+            if(event.type==SDL_KEYDOWN){
+                SDL_Keycode key=event.key.keysym.sym;
+                char c=(char)key;
+                if (key == SDLK_BACKSPACE) {
+                    if (focused==1 && !s1.empty())s1.pop_back();
+                }
+                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    s1.clear();
+                    s2.clear();
+                    s3.clear();
+                    return;}
+
+                if(focused==1 && s1.length()<20) s1+=c;}}
+        if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    s1.clear();
+                    s2.clear();
+                    s3.clear();
+                    return;}}
+    }else if(mode==10){
+        if (event.type==SDL_MOUSEBUTTONDOWN){
+            if (570<event.button.x && event.button.x<770){
+                if(200<event.button.y && event.button.y<240){
+                    focused=1;
+                }else if(300<event.button.y && event.button.y<340){
+                    focused=2;
+                }else if(400<event.button.y && event.button.y<440){
+                    focused=3;
+            }
+        }}
+        if (focused!=-1){
+            if(event.type==SDL_KEYDOWN){
+                SDL_Keycode key=event.key.keysym.sym;
+                if (key == SDLK_BACKSPACE) {
+                    if (focused==1 && !s1.empty())s1.pop_back();
+                    else if (focused==2 && !s2.empty()) s2.pop_back();
+                    else if(focused==3 && !s3.empty()) s3.pop_back();
+                }
+                else if(key==SDLK_RETURN) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    s1.clear();
+                    s2.clear();
+                    s3.clear();
+                    return;
+}
+                if (key>=32 && key<=126) {  
+                    char c=(char)key;
+                    bool shift=(event.key.keysym.mod & KMOD_SHIFT);
+                    if (shift && c>='a' && c<= 'z') {
+                        c=toupper(c);
+                    }
+                    if(focused==1 && s1.length()<20) s1+=c;
+
+                else if(focused==2 && s2.length()<20) s2+=c;
+                else if(focused==3 && s3.length()<20) s3+=c;}
+                
+                        }
+                
+        }if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    return;}
+        }
+          
+        
+
+
+
+    }else if (mode == 11){
+        if (event.type==SDL_MOUSEBUTTONDOWN){
+            if (570<event.button.x && event.button.x<770){
+                if(200<event.button.y && event.button.y<240){
+                    focused=1;
+                }}}
+        if (focused!=-1){
+            if(event.type==SDL_KEYDOWN){
+                SDL_Keycode key=event.key.keysym.sym;
+                char c=(char)key;
+                if (key == SDLK_BACKSPACE) {
+                    if (focused==1 && !s1.empty())s1.pop_back();
+                }
+                else if(key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    
+                    focused=-1;
+                    mode=0;
+                    s1.clear();}
+
+                if(focused==1 && s1.length()<20) s1+=c;}}
+        if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    return;}
+        }
+          }
+    else if (mode == 12){
+        if (event.type==SDL_MOUSEBUTTONDOWN){
+            if (570<event.button.x && event.button.x<770){
+                if(200<event.button.y && event.button.y<240){
+                    focused=1;
+                }}}
+        if (focused!=-1){
+            if(event.type==SDL_KEYDOWN){
+                SDL_Keycode key=event.key.keysym.sym;
+                char c=(char)key;
+                if (key == SDLK_BACKSPACE) {
+                    if (focused==1 && !s1.empty())s1.pop_back();
+                }
+                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    s1.clear();
+                    return;}
+
+                if(focused==1 && s1.length()<20) s1+=c;}}
+        if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    return;}}
+    }else if (mode == 13){
+        if (event.type==SDL_MOUSEBUTTONDOWN){
+            if (570<event.button.x && event.button.x<770){
+                if(200<event.button.y && event.button.y<240){
+                    focused=1;
+                }}}
+        if (focused!=-1){
+            if(event.type==SDL_KEYDOWN){
+                SDL_Keycode key=event.key.keysym.sym;
+                char c=(char)key;
+                if (key == SDLK_BACKSPACE) {
+                    if (focused==1 && !s1.empty())s1.pop_back();
+                }
+                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    s1.clear();
+                    return;}
+
+                if(focused==1 && s1.length()<20) s1+=c;}}
+        if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    mode=0;
+                    return;}}
+    }
                 
             
             
