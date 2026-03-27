@@ -12,7 +12,7 @@ int main(void){
             if(event.type==SDL_QUIT){
                 running=false;
             };
-            uic.handel(&event,&mode);
+            uic.handel(event,mode);
         
         
         
