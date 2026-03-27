@@ -17,6 +17,10 @@ class database{
         sqlite3* db;
     public:
     int opening(int choice);
+    std::vector search(int table,int id );
+    int delete(int table,int id);
+    int modify(int table,int id );
+    int add(int table,int id);
 };
 int database::opening(int choice){
     if(choice==0){
@@ -72,6 +76,87 @@ int database::opening(int choice){
     }
     return 0;
 };
+
+
+bool database::search(int table,int id ,books& book,author& author,staff& staff){
+    switch(table){
+        case 1:
+            
+            sqlite3_stmt* stmt;
+            const char* sql = "SELECT id, name, borrowed, author, pages FROM books WHERE id = ?";
+            sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr);
+            sqlite3_bin_int(stmt,1,id);
+            if(sqlite3_step(stmt)!SQLITE_ROW){
+                return false;
+            }else{
+                book = book.book(
+                    sqlite3_column_int(stmt, 0),
+                    sqlite3_column_text(stmt, 1),
+                    sqlite3_column_text(stmt, 3),
+                    sqlite3_column_int(stmt, 4),
+                    sqlite3_column_bool(stmt, 2))
+            }sqlite3_finalize(stmt);
+            break;
+        case 2:
+            sqlite3_stmt* stmt;
+            const char* sql = "SELECT id, name, age, skin, books FROM books WHERE id = ?";
+            sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr);
+            sqlite3_bin_int(stmt,1,id);
+            if(sqlite3_step(stmt)!SQLITE_ROW){
+                return false;
+            }else{
+                book = book.book(
+                    sqlite3_column_int(stmt, 0),
+                    sqlite3_column_text(stmt, 1),
+                    sqlite3_column_int(stmt, 4),
+                    sqlite3_column_int(stmt, 3),
+                    sqlite3_column_text(stmt, 2))
+            }sqlite3_finalize(stmt);
+            break;
+        case 3:
+            sqlite3_stmt* stmt;
+            const char* sql = "SELECT id, name, age, rank, salary FROM books WHERE id = ?";
+            sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr);
+            sqlite3_bin_int(stmt,1,id);
+            if(sqlite3_step(stmt)!SQLITE_ROW){
+                return false;
+            }else{
+                book = book.book(
+                    sqlite3_column_int(stmt, 0),
+                    sqlite3_column_text(stmt, 1),
+                    sqlite3_column_int(stmt, 4),
+                    sqlite3_column_int(stmt, 3),
+                    sqlite3_column_text(stmt, 2))
+            }sqlite3_finalize(stmt);
+            break;
+        }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
