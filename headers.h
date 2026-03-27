@@ -4,18 +4,74 @@
 #include <vector>
 #include <iostream>
 #include <string>
-
+#include <tinyfiledialogs.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <sqlite3.h>
 
 
 
 
+class database{
+    private:
+        sqlite3* db;
+    public:
+    int opening(int choice);
+};
+int database::opening(int choice){
+    if(choice==0){
+        sqlite3_open("books.sqlite",&db);
+        const char* createBooksTable = 
+        "CREATE TABLE IF NOT EXISTS books ("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "name TEXT NOT NULL,"
+        "author TEXT NOT NULL,"
+        "pages INTEGER,"
+        "borrowed BOOL"
+        ");";
+        if(sqlite3_exec(db, createBooksTable, nullptr, nullptr, nullptr)!=SQLITE_OK) return 1;
 
+        const char* createauthorsTable = 
+        "CREATE TABLE IF NOT EXISTS authors ("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "name TEXT NOT NULL,"
+        "age INTEGER,"
+        "skin TEXT NOT NULL,"
+        "books INTEGER"
+        ");";
+        if(sqlite3_exec(db, createauthorsTable, nullptr, nullptr, nullptr)!=SQLITE_OK) return 1;    
 
-
-
-
+        const char* createstaffTable = 
+        "CREATE TABLE IF NOT EXISTS staff ("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "name TEXT NOT NULL,"
+        "age INTEGER,"
+        "salary INTEGER,"
+        "pos INTEGER"
+        ");";
+        if(sqlite3_exec(db, createstaffTable, nullptr, nullptr, nullptr)!=SQLITE_OK) return 1;
+        return 0;
+    }else if (choice==1){
+        char* filename = tinyfd_openFileDialog(
+            "Select Database File",
+            "",
+            0,
+            NULL,
+            "SQLite Files (*.sqlite;*.db)",
+            0
+        );
+        if (filename==NULL) return 2;
+        if(sqlite3_open(filename,&db)!=SQLITE_OK) return 1; 
+        int res = sqlite3_exec(db, "SELECT count(*) FROM sqlite_master;", nullptr, nullptr, nullptr);
+        if (res!=SQLITE_OK){
+            sqlite3_close(db);
+            db = nullptr;
+            return 1;
+        }
+        return 0;
+    }
+    return 0;
+};
 
 
 
@@ -58,6 +114,7 @@ class SDLinit{
     public:
         SDLinit(const std::string &title,int w,int h);
         ~SDLinit();
+        std::string message="";
         SDL_Renderer* getrender(){return renderer;}
         TTF_Font* getFont() { return font; }
         void clear();
@@ -129,16 +186,39 @@ void SDLinit::drawtextarea(int x,int y,int w,int h,int r,int g,int b){
 class uinter{
     private:
         SDLinit& sdl;
+        database& db;
         std::string s1="",s2="",s3="";
         int focused=-1;
 
     public:
         void layout(int mode);
         void handel(SDL_Event& event,int& mode);
-        uinter(SDLinit& s):sdl(s){}
-};
+        uinter(SDLinit& s,database& m):sdl(s),db(m){}};
 void uinter::layout(int mode){
-    if(mode==0){
+    if(mode==-1){
+        sdl.drawbut(300,240,200,100,150,150,150,"import");
+        sdl.drawbut(800,240,200,100,80,80,80,"create");
+        if(sdl.message!=""){
+            TTF_Font *font=sdl.getFont();
+            SDL_Renderer* renderer=sdl.getrender();
+            SDL_Color black = {0,0,0,255};
+            SDL_Surface* surf=TTF_RenderText_Solid(font,sdl.message.c_str(),black);
+            int tw = surf->w;
+            int th = surf->h;
+            SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+            SDL_Rect rect={350,200,tw,th};
+            SDL_RenderCopy(renderer,tex,NULL,&rect);
+            
+
+
+
+
+
+
+
+
+        }
+    }else if(mode==0){
         sdl.drawbut(50,50,200,100,150,150,150,"books");
         sdl.drawbut(50,240,200,100,80,80,80,"add");
         sdl.drawbut(50,360,200,100,80,80,80,"delete");
@@ -730,7 +810,40 @@ void uinter::layout(int mode){
     
 }
 void uinter::handel(SDL_Event& event,int& mode){
-    if (mode==0){
+    if(mode==-1){
+        if(event.type==SDL_MOUSEBUTTONDOWN){
+            int x=event.button.x;
+            int y=event.button.y;
+            if(300<x && x<500 && 240<y && y<340){
+                int res=db.opening(1);
+                if (res==1){
+                    sdl.message=" niggga that aint a valid file....";
+                    return;
+                }else if(res==2){
+                    sdl.message="pussy ahh nigga...";
+                    return;
+                }else if ( res==0){
+                    mode=0;
+                    return;
+                }
+            }else if (800<x && x<1000 && 240<y && y<340){
+                int res=db.opening(0);
+                if (res==0){
+                    mode=0;
+                }
+                return;
+            }
+        }
+    
+    
+    
+    
+    
+    
+    
+    
+    }
+    else if (mode==0){
         if (event.type==SDL_MOUSEBUTTONDOWN){
             int mouse_x=event.button.x;
             int mouse_y=event.button.y;
@@ -1378,6 +1491,8 @@ void uinter::handel(SDL_Event& event,int& mode){
             
             
             }
+
+    
                 
 
 

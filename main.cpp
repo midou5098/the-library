@@ -3,9 +3,10 @@
 
 int main(void){
     SDLinit sdl("fuckass library",1280,720);
-    uinter uic(sdl);
+    database dbs;
+    uinter uic(sdl,dbs);
     SDL_Event event;
-    int mode=0;
+    int mode=-1;
     bool running = true;
     while(running){
         while(SDL_PollEvent(&event)){
