@@ -11,14 +11,50 @@
 
 
 
+class book{
+    private:
+        int id;
+        std::string name;
+        std::string author;
+        int pages;
+        bool isbrwd;
+    public:
+        book(int id=-1,const std::string&name="",const std::string&author="",int pages=-1,bool isbrwd=false );
+};
+book::book(int id, const std::string& name, const std::string& author, int pages, bool isbrwd)
+    : id(id), name(name), author(author), pages(pages), isbrwd(isbrwd) {}
+class author{
+    private:
+        int id;
+        std::string name;
+        int buknb;
+        int age;
+        std::string skin;
+    public:
+        author(int id=-1,const std::string&name="",int buknb=-1,int age=-1,const std::string&skin=""  );
+};
 
+author::author(int id, const std::string& name, int buknb, int age, const std::string& skin)
+    : id(id), name(name), buknb(buknb), age(age), skin(skin) {}
+class staff{
+    private:
+        int id;
+        std::string name;
+        int rank;
+        int age;
+        int salary;
+    public:
+        staff(int id=-1,const std::string&name="",int rank=-1,int age=-1,int salary=-1  );
+};
+staff::staff(int id, const std::string& name, int rank, int age, int salary)
+    : id(id), name(name), rank(rank), age(age), salary(salary) {}
 class database{
     private:
         sqlite3* db;
     public:
     int opening(int choice);
-    std::vector search(int table,int id );
-    int delete(int table,int id);
+    bool search(int table, int id, book& booki, author& authori, staff& staffi); 
+    int remove(int table,int id);
     int modify(int table,int id );
     int add(int table,int id);
 };
@@ -65,6 +101,10 @@ int database::opening(int choice){
             0
         );
         if (filename==NULL) return 2;
+        std::string fname(filename);
+        if(fname.size()<7 || fname.substr(fname.size()-7)!=".sqlite"){
+            return 1;
+        }
         if(sqlite3_open(filename,&db)!=SQLITE_OK) return 1; 
         int res = sqlite3_exec(db, "SELECT count(*) FROM sqlite_master;", nullptr, nullptr, nullptr);
         if (res!=SQLITE_OK){
@@ -78,58 +118,59 @@ int database::opening(int choice){
 };
 
 
-bool database::search(int table,int id ,books& book,author& author,staff& staff){
+bool database::search(int table,int id ,book& booki,author& authori,staff& staffi){
+    sqlite3_stmt* stmt;
+    const char* sql;
     switch(table){
         case 1:
             
-            sqlite3_stmt* stmt;
-            const char* sql = "SELECT id, name, borrowed, author, pages FROM books WHERE id = ?";
+            
+            sql = "SELECT id, name, author, pages, borrowed FROM books WHERE id = ?";
             sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr);
-            sqlite3_bin_int(stmt,1,id);
-            if(sqlite3_step(stmt)!SQLITE_ROW){
+            sqlite3_bind_int(stmt,1,id);
+            if(sqlite3_step(stmt)!=SQLITE_ROW){
                 return false;
             }else{
-                book = book.book(
+                booki = ::book(
                     sqlite3_column_int(stmt, 0),
-                    sqlite3_column_text(stmt, 1),
-                    sqlite3_column_text(stmt, 3),
-                    sqlite3_column_int(stmt, 4),
-                    sqlite3_column_bool(stmt, 2))
+                    reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)),
+                    reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2)),
+                    sqlite3_column_int(stmt, 3),
+                    sqlite3_column_int(stmt, 4));
             }sqlite3_finalize(stmt);
             break;
         case 2:
-            sqlite3_stmt* stmt;
-            const char* sql = "SELECT id, name, age, skin, books FROM books WHERE id = ?";
+            sql = "SELECT id, name, age, skin, books FROM authors WHERE id = ?";
             sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr);
-            sqlite3_bin_int(stmt,1,id);
-            if(sqlite3_step(stmt)!SQLITE_ROW){
+            sqlite3_bind_int(stmt,1,id);
+            if(sqlite3_step(stmt)!=SQLITE_ROW){
                 return false;
             }else{
-                book = book.book(
+                authori = ::author(
                     sqlite3_column_int(stmt, 0),
-                    sqlite3_column_text(stmt, 1),
+                    reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)),
                     sqlite3_column_int(stmt, 4),
-                    sqlite3_column_int(stmt, 3),
-                    sqlite3_column_text(stmt, 2))
+                    sqlite3_column_int(stmt, 2),
+                    reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3)));
             }sqlite3_finalize(stmt);
             break;
         case 3:
-            sqlite3_stmt* stmt;
-            const char* sql = "SELECT id, name, age, rank, salary FROM books WHERE id = ?";
+            sql = "SELECT id, name, age, salary, pos FROM staff WHERE id = ?";
             sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr);
-            sqlite3_bin_int(stmt,1,id);
-            if(sqlite3_step(stmt)!SQLITE_ROW){
+            sqlite3_bind_int(stmt,1,id);
+            if(sqlite3_step(stmt)!=SQLITE_ROW){
                 return false;
             }else{
-                book = book.book(
+                staffi = ::staff(
                     sqlite3_column_int(stmt, 0),
-                    sqlite3_column_text(stmt, 1),
-                    sqlite3_column_int(stmt, 4),
+                    reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)),
+                    sqlite3_column_int(stmt, 2),
                     sqlite3_column_int(stmt, 3),
-                    sqlite3_column_text(stmt, 2))
+                    sqlite3_column_int(stmt, 4));
             }sqlite3_finalize(stmt);
             break;
         }
+    return true;
 }
 
 
@@ -161,36 +202,7 @@ bool database::search(int table,int id ,books& book,author& author,staff& staff)
 
 
 
-class book{
-    private:
-        int id;
-        std::string name;
-        std::string author;
-        int pages;
-        bool isbrwd;
-    public:
-        book(int id=-1,const std::string&name="",const std::string&author="",int pages=-1,bool isbrwd=false );
-};
-class author{
-    private:
-        int id;
-        std::string name;
-        int buknb;
-        int age;
-        std::string skin;
-    public:
-        author(int id=-1,const std::string&name="",int buknb=-1,int age=-1,const std::string&skin=""  );
-};
-class staff{
-    private:
-        int id;
-        std::string name;
-        int rank;
-        int age;
-        int salary;
-    public:
-        staff(int id=-1,const std::string&name="",int rank=-1,int age=-1,int salary=-1  );
-};
+
 class SDLinit{
     private:
         SDL_Window* window;
@@ -293,15 +305,6 @@ void uinter::layout(int mode){
             SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
             SDL_Rect rect={350,200,tw,th};
             SDL_RenderCopy(renderer,tex,NULL,&rect);
-            
-
-
-
-
-
-
-
-
         }
     }else if(mode==0){
         sdl.drawbut(50,50,200,100,150,150,150,"books");
@@ -429,7 +432,17 @@ void uinter::layout(int mode){
         SDL_FreeSurface(surf);
         SDL_DestroyTexture(tex);
         sdl.drawtextarea(570,190,200,40,0,0,0);    
-    
+        if(sdl.message!=""){
+            TTF_Font *font=sdl.getFont();
+            SDL_Renderer* renderer=sdl.getrender();
+            SDL_Color black = {0,0,0,255};
+            SDL_Surface* surf=TTF_RenderText_Solid(font,sdl.message.c_str(),black);
+            int tw = surf->w;
+            int th = surf->h;
+            SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+            SDL_Rect rect={350,200,tw,th};
+            SDL_RenderCopy(renderer,tex,NULL,&rect);
+        }
     
         if(!s1.empty()){
             SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
@@ -580,7 +593,17 @@ void uinter::layout(int mode){
         SDL_FreeSurface(surf);
         SDL_DestroyTexture(tex);
         sdl.drawtextarea(570,190,200,40,0,0,0);    
-    
+        if(sdl.message!=""){
+            TTF_Font *font=sdl.getFont();
+            SDL_Renderer* renderer=sdl.getrender();
+            SDL_Color black = {0,0,0,255};
+            SDL_Surface* surf=TTF_RenderText_Solid(font,sdl.message.c_str(),black);
+            int tw = surf->w;
+            int th = surf->h;
+            SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+            SDL_Rect rect={350,200,tw,th};
+            SDL_RenderCopy(renderer,tex,NULL,&rect);
+        }
     
         if(!s1.empty()){
             SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
@@ -724,7 +747,17 @@ void uinter::layout(int mode){
         SDL_FreeSurface(surf);
         SDL_DestroyTexture(tex);
         sdl.drawtextarea(570,190,200,40,0,0,0);    
-    
+        if(sdl.message!=""){
+            TTF_Font *font=sdl.getFont();
+            SDL_Renderer* renderer=sdl.getrender();
+            SDL_Color black = {0,0,0,255};
+            SDL_Surface* surf=TTF_RenderText_Solid(font,sdl.message.c_str(),black);
+            int tw = surf->w;
+            int th = surf->h;
+            SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+            SDL_Rect rect={350,200,tw,th};
+            SDL_RenderCopy(renderer,tex,NULL,&rect);
+        }
     
         if(!s1.empty()){
             SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
@@ -1061,7 +1094,19 @@ void uinter::handel(SDL_Event& event,int& mode){
                 if (key == SDLK_BACKSPACE) {
                     if (focused==1 && !s1.empty())s1.pop_back();
                 }
-                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                if(key==SDLK_RETURN){
+                    book booki;
+                    author authori;
+                    staff staffi;
+                    bool t = db.search(1, std::stoi(s1), booki, authori, staffi);
+                    if (t){
+                        sdl.message="book modified twin";
+                    }else{
+                        sdl.message="book not found twin";
+                    }
+
+                }
+                else if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
@@ -1071,7 +1116,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                 if(focused==1 && s1.length()<20) s1+=c;}}
         if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+            if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
@@ -1089,7 +1134,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                 if (key == SDLK_BACKSPACE) {
                     if (focused==1 && !s1.empty())s1.pop_back();
                 }
-                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                else if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
@@ -1099,7 +1144,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                 if(focused==1 && s1.length()<20) s1+=c;}}
         if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+            if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
@@ -1194,7 +1239,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                     return;}
         }
           }
-    else if (mode == 22){
+    else if (mode==22){
         if (event.type==SDL_MOUSEBUTTONDOWN){
             if (570<event.button.x && event.button.x<770){
                 if(200<event.button.y && event.button.y<240){
@@ -1207,7 +1252,19 @@ void uinter::handel(SDL_Event& event,int& mode){
                 if (key == SDLK_BACKSPACE) {
                     if (focused==1 && !s1.empty())s1.pop_back();
                 }
-                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                if(key==SDLK_RETURN){
+                    book booki;
+                    author authori;
+                    staff staffi;
+                    bool t = db.search(1, std::stoi(s1), booki, authori, staffi);
+                    if (t){
+                        sdl.message="book modified twin";
+                    }else{
+                        sdl.message="book not found twin";
+                    }
+
+                }
+                else if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
@@ -1257,146 +1314,6 @@ void uinter::handel(SDL_Event& event,int& mode){
                     s1.clear();
                     s2.clear();
                     s3.clear();
-                    return;}}
-    }else if(mode==10){
-        if (event.type==SDL_MOUSEBUTTONDOWN){
-            if (570<event.button.x && event.button.x<770){
-                if(200<event.button.y && event.button.y<240){
-                    focused=1;
-                }else if(300<event.button.y && event.button.y<340){
-                    focused=2;
-                }else if(400<event.button.y && event.button.y<440){
-                    focused=3;
-            }
-        }}
-        if (focused!=-1){
-            if(event.type==SDL_KEYDOWN){
-                SDL_Keycode key=event.key.keysym.sym;
-                if (key == SDLK_BACKSPACE) {
-                    if (focused==1 && !s1.empty())s1.pop_back();
-                    else if (focused==2 && !s2.empty()) s2.pop_back();
-                    else if(focused==3 && !s3.empty()) s3.pop_back();
-                }
-                else if(key==SDLK_RETURN) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
-                    focused=-1;
-                    mode=0;
-                    s1.clear();
-                    s2.clear();
-                    s3.clear();
-                    return;
-}
-                if (key>=32 && key<=126) {  
-                    char c=(char)key;
-                    bool shift=(event.key.keysym.mod & KMOD_SHIFT);
-                    if (shift && c>='a' && c<= 'z') {
-                        c=toupper(c);
-                    }
-                    if(focused==1 && s1.length()<20) s1+=c;
-
-                else if(focused==2 && s2.length()<20) s2+=c;
-                else if(focused==3 && s3.length()<20) s3+=c;}
-                
-                        }
-                
-        }if (event.type==SDL_KEYDOWN){
-            SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
-                    focused=-1;
-                    mode=0;
-                    return;}
-        }
-          
-        
-
-
-
-    }else if (mode == 11){
-        if (event.type==SDL_MOUSEBUTTONDOWN){
-            if (570<event.button.x && event.button.x<770){
-                if(200<event.button.y && event.button.y<240){
-                    focused=1;
-                }}}
-        if (focused!=-1){
-            if(event.type==SDL_KEYDOWN){
-                SDL_Keycode key=event.key.keysym.sym;
-                char c=(char)key;
-                if (key == SDLK_BACKSPACE) {
-                    if (focused==1 && !s1.empty())s1.pop_back();
-                }
-                else if(key==SDLK_ESCAPE) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
-                    
-                    focused=-1;
-                    mode=0;
-                    s1.clear();}
-
-                if(focused==1 && s1.length()<20) s1+=c;}}
-        if (event.type==SDL_KEYDOWN){
-            SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
-                    focused=-1;
-                    mode=0;
-                    return;}
-        }
-          }
-    else if (mode == 12){
-        if (event.type==SDL_MOUSEBUTTONDOWN){
-            if (570<event.button.x && event.button.x<770){
-                if(200<event.button.y && event.button.y<240){
-                    focused=1;
-                }}}
-        if (focused!=-1){
-            if(event.type==SDL_KEYDOWN){
-                SDL_Keycode key=event.key.keysym.sym;
-                char c=(char)key;
-                if (key == SDLK_BACKSPACE) {
-                    if (focused==1 && !s1.empty())s1.pop_back();
-                }
-                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
-                    focused=-1;
-                    mode=0;
-                    s1.clear();
-                    return;}
-
-                if(focused==1 && s1.length()<20) s1+=c;}}
-        if (event.type==SDL_KEYDOWN){
-            SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
-                    focused=-1;
-                    mode=0;
-                    return;}}
-    }else if (mode == 13){
-        if (event.type==SDL_MOUSEBUTTONDOWN){
-            if (570<event.button.x && event.button.x<770){
-                if(200<event.button.y && event.button.y<240){
-                    focused=1;
-                }}}
-        if (focused!=-1){
-            if(event.type==SDL_KEYDOWN){
-                SDL_Keycode key=event.key.keysym.sym;
-                char c=(char)key;
-                if (key == SDLK_BACKSPACE) {
-                    if (focused==1 && !s1.empty())s1.pop_back();
-                }
-                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
-                    focused=-1;
-                    mode=0;
-                    s1.clear();
-                    return;}
-
-                if(focused==1 && s1.length()<20) s1+=c;}}
-        if (event.type==SDL_KEYDOWN){
-            SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
-                    focused=-1;
-                    mode=0;
                     return;}}
     }else if(mode==30){
         if (event.type==SDL_MOUSEBUTTONDOWN){
@@ -1503,7 +1420,19 @@ void uinter::handel(SDL_Event& event,int& mode){
                 if (key == SDLK_BACKSPACE) {
                     if (focused==1 && !s1.empty())s1.pop_back();
                 }
-                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+                if(key==SDLK_RETURN){
+                    book booki;
+                    author authori;
+                    staff staffi;
+                    bool t = db.search(1, std::stoi(s1), booki, authori, staffi);
+                    if (t){
+                        sdl.message="book modified twin";
+                    }else{
+                        sdl.message="book not found twin";
+                    }
+
+                }
+                else if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
@@ -1513,7 +1442,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                 if(focused==1 && s1.length()<20) s1+=c;}}
         if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+            if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
