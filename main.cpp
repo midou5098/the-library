@@ -4,13 +4,19 @@
 int main(void){
     SDLinit sdl("fuckass library",1280,720);
     uinter uic(sdl);
-
+    SDL_Event event;
     int mode=0;
     bool running = true;
     while(running){
-        if(sdl.handel_event()==false){
-            running=false;
-        };
+        while(SDL_PollEvent(&event)){
+            if(event.type==SDL_QUIT){
+                running=false;
+            };
+            uic.handel(&event,&mode);
+        
+        
+        
+        }
         sdl.clear();
         uic.layout(mode);
         sdl.present(); 

@@ -97,21 +97,11 @@ bool SDLinit::handel_event(){
     while(SDL_PollEvent(&event)){
         if(event.type==SDL_QUIT){
             return false;
-        else if(event.type==SDL_KEYDOWN){
-            if(event.key.keysym.sym=SDL_ENTER ){
-                if(len(s)<4){
-                    SDL_Rect rect={500,680,200,40};
-                    SDL_Surface* surf=TTF_RenderText_Solid(font," name gotta be 4 letters long twin",white);
-                    SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
-                    SDL_RenderCopy(renderer,tex,NULL,&rect2);
-
-                }
-
-            }
         }
-        }
+        return true;
     }
-    return true;}
+    return false;
+    }
 void SDLinit::drawbut(int x,int y,int w,int h,int r,int g,int b,const std::string &text){
     
     SDL_SetRenderDrawColor(renderer,r,g,b,255);
@@ -137,8 +127,10 @@ void SDLinit::drawtextarea(int x,int y,int w,int h,int r,int g,int b){
 class uinter{
     private:
         SDLinit& sdl;
+        std::string s1="",s2="",s3="";
     public:
         void layout();
+        void handle(SDL_Event event,int& mode);
         uinter(SDLinit& s):sdl(s){}
 };
 void uinter::layout(int mode){
@@ -161,10 +153,96 @@ void uinter::layout(int mode){
         sdl.drawbut(1000,480,200,100,80,80,80,"search");
         sdl.drawbut(1000,600,200,100,80,80,80,"modify");
         
-    }else if mode==10){
+    }else if (mode==10){
+        SDL_Rect rect={500,300,200,40};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," book name type shi? : ",white);
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_RenderCopy(renderer,tex,NULL,&rect2);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        SDL_SetRenderDrawColor(renderer,0,0,0,255);
+        SDL_Rect rect={570,300,200,40};
+        SDL_RenderDrawRect(renderer,&rect);
+        
+        SDL_Rect rect={500,400,200,40};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," book author type shi? : ",white);
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_RenderCopy(renderer,tex,NULL,&rect2);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        SDL_SetRenderDrawColor(renderer,0,0,0,255);
+        SDL_Rect rect={570,400,200,40};
+        SDL_RenderDrawRect(renderer,&rect);
 
+        SDL_Rect rect={500,500,200,40};
+        SDL_Surface* surf=TTF_RenderText_Solid(font," book pages type shi? : ",white);
+        SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+        SDL_RenderCopy(renderer,tex,NULL,&rect2);
+        SDL_FreeSurface(surf);
+        SDL_DestroyTexture(tex);
+        SDL_SetRenderDrawColor(renderer,0,0,0,255);
+        SDL_Rect rect={570,500,200,40};
+        SDL_RenderDrawRect(renderer,&rect);
     }
 
+}
+void uinter::handle(SDL_Event& event,int& mode){
+    std::string s1="",s2="",s3="";
+    if (mode==0){
+        if (event.type==MOUSEBUTTONDOWN){
+            mouse_x=event.button.x;
+            mouse_x=event.button.y;
+            if (50<mouse_x<250){
+                    if(240<mouse_y<340){
+                        mode=10;
+                    }else if(360<mouse_y<480){
+                        mode=11;
+                    }else if(480<mouse_y<580){
+                        mode=12;
+                    }else if(600<mouse_y<700){
+                        mode=13;
+                    }
+            }else if (550<mouse_x<750){
+                    if(240<mouse_y<340){
+                        mode=20;
+                    }else if(360<mouse_y<480){
+                        mode=21;
+                    }else if(480<mouse_y<580){
+                        mode=22;
+                    }else if(600<mouse_y<700){
+                        mode=23;
+                    }
+            }else if (1000<mouse_x<1200){
+                    if(240<mouse_y<340){
+                        mode=30;
+                    }else if(360<mouse_y<480){
+                        mode=31;
+                    }else if(480<mouse_y<580){
+                        mode=32;
+                    }else if(600<mouse_y<700){
+                        mode=33;
+                    }
+            }
+        }
+    }else if(mode==10){
+        int focused=-1;
+        if (event.type==SDL_MOUSEBUTTONDOWN){
+            if (570<event.button.x && event.button.x<770):
+                if(300<event.button.y && event.button.y<340){
+                    focused=1;
+                }else if(400<event.button.y && event.button.y<440){
+                    focused=2;
+                }else if(500<event.button.y && event.button.y<540){
+                    focused=3;
+            }
+        }
+        if (focused!=-1){
+
+        }
+
+
+
+    }
 }
 
 
