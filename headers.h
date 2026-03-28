@@ -69,7 +69,7 @@ class database{
     public:
     int opening(int choice);
     bool search(int table, int id, book& booki, author& authori, staff& staffi); 
-    int remove(int table,int id);
+    bool remove(int table,int id);
     int modify(int table,int id );
     int add(int table,int id);
 };
@@ -131,7 +131,24 @@ int database::opening(int choice){
     }
     return 0;
 };
-
+bool database::remove(int mod, int id) {
+    sqlite3_stmt* stmt;
+    const char* sql;
+    switch(mod) {
+        case 1: 
+            sql = "DELETE FROM books WHERE id = ?";   break;
+        case 2: 
+            sql = "DELETE FROM authors WHERE id = ?"; break;
+        case 3: 
+            sql = "DELETE FROM staff WHERE id = ?";   break;
+        default: return false;
+    }
+    if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) return false;
+    sqlite3_bind_int(stmt, 1, id);
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    return sqlite3_changes(db) > 0;
+}  
 
 bool database::search(int table,int id ,book& booki,author& authori,staff& staffi){
     sqlite3_stmt* stmt;
@@ -422,7 +439,17 @@ void uinter::layout(int mode){
         SDL_FreeSurface(surf);
         SDL_DestroyTexture(tex);
         sdl.drawtextarea(570,190,200,40,0,0,0);    
-    
+        if(sdl.message!=""){
+            TTF_Font *font=sdl.getFont();
+            SDL_Renderer* renderer=sdl.getrender();
+            SDL_Color black = {0,0,0,255};
+            SDL_Surface* surf=TTF_RenderText_Solid(font,sdl.message.c_str(),black);
+            int tw = surf->w;
+            int th = surf->h;
+            SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+            SDL_Rect rect={50,50,tw,th};
+            SDL_RenderCopy(renderer,tex,NULL,&rect);
+        }
     
         if(!s1.empty()){
             SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
@@ -1055,7 +1082,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                 
         }if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+            if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
@@ -1084,12 +1111,20 @@ void uinter::handel(SDL_Event& event,int& mode){
                     
                     focused=-1;
                     mode=0;
-                    s1.clear();}
+                    s1.clear();
+                    sdl.message.clear();}
+                else if(key==SDLK_RETURN){
+                    if(s1!=""){
+                        bool t = db.remove(1, std::stoi(s1));
+                        if (t){sdl.message=" book deleted successfully nigga dw";}
+                        else{sdl.message="book not found twin";}
+                    }
+                }
 
                 if(focused==1 && s1.length()<20) s1+=c;}}
         if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+            if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
@@ -1241,11 +1276,17 @@ void uinter::handel(SDL_Event& event,int& mode){
                     focused=-1;
                     mode=0;
                     s1.clear();}
+                if(key==SDLK_RETURN){
+                if(!s1.empty()){
+                    bool t = db.remove(2, std::stoi(s1));
+                    if (t){sdl.message=" author deleted successfully nigga dw";}
+                    else{sdl.message="author not found twin";}}
+                }
 
                 if(focused==1 && s1.length()<20) s1+=c;}}
         if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+            if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
@@ -1408,11 +1449,15 @@ void uinter::handel(SDL_Event& event,int& mode){
                     s1.clear();
                     s2.clear();
                     s3.clear();}
-
+                if(key==SDLK_RETURN){
+                if(!s1.empty()){
+                    bool t = db.remove(3, std::stoi(s1));
+                    if (t){sdl.message=" staff deleted successfully nigga dw";}
+                    else{sdl.message="staff not found twin";}}}
                 if(focused==1 && s1.length()<20) s1+=c;}}
         if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+            if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
