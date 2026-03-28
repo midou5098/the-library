@@ -36,6 +36,11 @@ class author{
         int age;
         std::string skin;
     public:
+        int getId() const { return id; }
+        std::string getname() const { return name; }
+        int getage() const { return age; }
+        std::string getskin() const { return skin; }
+        int getbooks() const { return buknb; }
         author(int id=-1,const std::string&name="",int buknb=-1,int age=-1,const std::string&skin=""  );
 };
 
@@ -49,6 +54,11 @@ class staff{
         int age;
         int salary;
     public:
+        int getId() const { return id; }
+        std::string getname() const { return name; }
+        int getage() const { return age; }
+        int getpos() const { return rank; }
+        int getsalary() const { return salary; }
         staff(int id=-1,const std::string&name="",int rank=-1,int age=-1,int salary=-1  );
 };
 staff::staff(int id, const std::string& name, int rank, int age, int salary)
@@ -606,7 +616,7 @@ void uinter::layout(int mode){
             int tw = surf->w;
             int th = surf->h;
             SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
-            SDL_Rect rect={350,200,tw,th};
+            SDL_Rect rect={50,50,tw,th};
             SDL_RenderCopy(renderer,tex,NULL,&rect);
         }
     
@@ -760,7 +770,7 @@ void uinter::layout(int mode){
             int tw = surf->w;
             int th = surf->h;
             SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
-            SDL_Rect rect={350,200,tw,th};
+            SDL_Rect rect={50,50,tw,th};
             SDL_RenderCopy(renderer,tex,NULL,&rect);
         }
     
@@ -1262,9 +1272,9 @@ void uinter::handel(SDL_Event& event,int& mode){
                     book booki;
                     author authori;
                     staff staffi;
-                    bool t = db.search(1, std::stoi(s1), booki, authori, staffi);
+                    bool t = db.search(2, std::stoi(s1), booki, authori, staffi);
                     if (t){
-                        sdl.message="book modified twin";
+                        sdl.message="author named : "+authori.getname()+", aged  : "+std::to_string(authori.getage())+" years , skin color : "+authori.getskin()+", books count : "+std::to_string(authori.getbooks());
                     }else{
                         sdl.message="book not found twin";
                     }
@@ -1275,7 +1285,6 @@ void uinter::handel(SDL_Event& event,int& mode){
                     focused=-1;
                     mode=0;
                     s1.clear();
-                    s1.clear();
                     s2.clear();
                     s3.clear();
                     return;}
@@ -1283,7 +1292,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                 if(focused==1 && s1.length()<20) s1+=c;}}
         if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+            if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
@@ -1430,9 +1439,9 @@ void uinter::handel(SDL_Event& event,int& mode){
                     book booki;
                     author authori;
                     staff staffi;
-                    bool t = db.search(1, std::stoi(s1), booki, authori, staffi);
+                    bool t = db.search(3, std::stoi(s1), booki, authori, staffi);
                     if (t){
-                        sdl.message="book modified twin";
+                        sdl.message="staff named :"+staffi.getname()+", aged : "+std::to_string(staffi.getage())+", position : "+std::to_string(staffi.getpos())+", salary : "+std::to_string(staffi.getsalary());
                     }else{
                         sdl.message="book not found twin";
                     }
