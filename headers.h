@@ -627,7 +627,17 @@ void uinter::layout(int mode){
         SDL_FreeSurface(surf3);
         SDL_DestroyTexture(tex3);
         sdl.drawtextarea(570,390,200,40,0,0,0);
-
+        if(sdl.message!=""){
+            TTF_Font *font=sdl.getFont();
+            SDL_Renderer* renderer=sdl.getrender();
+            SDL_Color black = {0,0,0,255};
+            SDL_Surface* surf=TTF_RenderText_Solid(font,sdl.message.c_str(),black);
+            int tw = surf->w;
+            int th = surf->h;
+            SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+            SDL_Rect rect={50,700,tw,th};
+            SDL_RenderCopy(renderer,tex,NULL,&rect);
+        }
         
         if(!s1.empty()){
             SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
@@ -781,7 +791,17 @@ void uinter::layout(int mode){
         SDL_FreeSurface(surf3);
         SDL_DestroyTexture(tex3);
         sdl.drawtextarea(570,390,200,40,0,0,0);
-
+        if(sdl.message!=""){
+            TTF_Font *font=sdl.getFont();
+            SDL_Renderer* renderer=sdl.getrender();
+            SDL_Color black = {0,0,0,255};
+            SDL_Surface* surf=TTF_RenderText_Solid(font,sdl.message.c_str(),black);
+            int tw = surf->w;
+            int th = surf->h;
+            SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+            SDL_Rect rect={50,700,tw,th};
+            SDL_RenderCopy(renderer,tex,NULL,&rect);
+        }
         
         if(!s1.empty()){
             SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
@@ -1140,6 +1160,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                     s1.clear();
                     s2.clear();
                     s3.clear();
+                    
                     return;
                 }
                 if (key>=32 && key<=126) {  
@@ -1160,6 +1181,7 @@ void uinter::handel(SDL_Event& event,int& mode){
             if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
+                    sdl.message.clear();
                     mode=0;
                     return;}
         }
@@ -1296,9 +1318,16 @@ void uinter::handel(SDL_Event& event,int& mode){
                     else if(focused==3 && !s3.empty()) s3.pop_back();
                 }
                 else if(key==SDLK_RETURN) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
-                    mode=0;
+                    book booki;
+                    author authori(-1,s1,0,std::stoi(s2),s3);
+                    staff staffi;
+                    int t=db.add(2,booki,authori,staffi);
+                    if(t!=-1){
+                        sdl.message="book added twin dw , id :"+std::to_string(t);
+                    }else{
+                        sdl.message="you definetly fucked somehting up ong";
+                    }
                     s1.clear();
                     s2.clear();
                     s3.clear();
@@ -1319,10 +1348,11 @@ void uinter::handel(SDL_Event& event,int& mode){
                 
         }if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+            if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
+                    sdl.message.clear();
                     s1.clear();
                     s2.clear();
                     s3.clear();
@@ -1469,9 +1499,18 @@ void uinter::handel(SDL_Event& event,int& mode){
                     else if(focused==3 && !s3.empty()) s3.pop_back();
                 }
                 else if(key==SDLK_RETURN) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
-                    mode=0;
+                    int temp=std::stoi(s3);
+                    int sl=temp*750;
+                    book booki;
+                    author authori;
+                    staff staffi(-1,s1,std::stoi(s2),std::stoi(s3),sl);
+                    int t=db.add(3,booki,authori,staffi);
+                    if(t!=-1){
+                        sdl.message="staff added twin dw , id :"+std::to_string(t);
+                    }else{
+                        sdl.message="you definetly fucked somehting up ong";
+                    }
                     s1.clear();
                     s2.clear();
                     s3.clear();
@@ -1492,10 +1531,11 @@ void uinter::handel(SDL_Event& event,int& mode){
                 
         }if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
+            if(key==SDLK_ESCAPE) {
                     std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
                     focused=-1;
                     mode=0;
+                    sdl.message.clear();
                     s1.clear();
                     s2.clear();
                     s3.clear();
