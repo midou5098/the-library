@@ -19,6 +19,11 @@ class book{
         int pages;
         bool isbrwd;
     public:
+        int getId() const { return id; }
+        std::string getName() const { return name; }
+        std::string getAuthor() const { return author; }
+        int getPages() const { return pages; }
+        bool isBorrowed() const { return isbrwd; }
         book(int id=-1,const std::string&name="",const std::string&author="",int pages=-1,bool isbrwd=false );
 };
 book::book(int id, const std::string& name, const std::string& author, int pages, bool isbrwd)
@@ -440,7 +445,7 @@ void uinter::layout(int mode){
             int tw = surf->w;
             int th = surf->h;
             SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
-            SDL_Rect rect={350,200,tw,th};
+            SDL_Rect rect={50,50,tw,th};
             SDL_RenderCopy(renderer,tex,NULL,&rect);
         }
     
@@ -1098,9 +1103,10 @@ void uinter::handel(SDL_Event& event,int& mode){
                     book booki;
                     author authori;
                     staff staffi;
+                    if (s1.empty())return;
                     bool t = db.search(1, std::stoi(s1), booki, authori, staffi);
                     if (t){
-                        sdl.message="book modified twin";
+                        sdl.message="book named : "+booki.getName()+", author is : "+booki.getAuthor()+", pages number : "+std::to_string(booki.getPages())+", state : "+(booki.isBorrowed() ? "Borrowed" : "Available");
                     }else{
                         sdl.message="book not found twin";
                     }
@@ -1113,7 +1119,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                     s1.clear();
                     return;}
 
-                if(focused==1 && s1.length()<20) s1+=c;}}
+                if(focused==1 && s1.length()<20 && key>=SDLK_0 && key<=SDLK_9) s1+=c;}}
         if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
             if(key==SDLK_ESCAPE) {
