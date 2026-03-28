@@ -274,12 +274,11 @@ int database::modify(int table,int id ,book& booki, author& authori, staff& staf
     std::string autname=authori.getname();
     int autage=authori.getage();
     std::string autskin=authori.getskin();
-    int autbook=authori.getbooks();
+
 
     std::string stafname=staffi.getname();
     int stafage=staffi.getage();
     int stafpos=staffi.getpos();
-    int stafsalary=staffi.getsalary();
 
     switch(table){
         case 1:{
@@ -293,25 +292,25 @@ int database::modify(int table,int id ,book& booki, author& authori, staff& staf
             sqlite3_finalize(stmt);
             return sqlite3_changes(db) > 0 ? id : -1;}
         case 2:
-            sql = "INSERT INTO authors (name, age, skin, books) VALUES (?, ?, ?,?);";
+            sql =  "UPDATE authors SET name = ?, age = ?, skin = ? WHERE id = ?;";
             sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr);
             sqlite3_bind_text(stmt,1,autname.c_str(), -1, SQLITE_STATIC);
-            sqlite3_bind_int(stmt,2,autage);
+            sqlite3_bind_int(stmt,4,id);
             sqlite3_bind_text(stmt,3,autskin.c_str(), -1, SQLITE_STATIC);
-            sqlite3_bind_int(stmt,4,autbook);
-            if(sqlite3_step(stmt)!=SQLITE_DONE){
-                return -1;
-            }return (int)sqlite3_last_insert_rowid(db);
+            sqlite3_bind_int(stmt,2,autage);
+            sqlite3_step(stmt); 
+            sqlite3_finalize(stmt);
+            return sqlite3_changes(db) > 0 ? id : -1;
         case 3:
-            sql = "INSERT INTO staff (name, age, pos, salary) VALUES (?, ?, ?,?);";
+            sql =  "UPDATE staff SET name = ?, age = ?, pos = ? WHERE id = ?;";
             sqlite3_prepare_v2(db,sql,-1,&stmt,nullptr);
             sqlite3_bind_text(stmt,1,stafname.c_str(), -1, SQLITE_STATIC);
             sqlite3_bind_int(stmt,2,stafage);
             sqlite3_bind_int(stmt,3,stafpos);
-            sqlite3_bind_int(stmt,4,stafsalary);
-            if(sqlite3_step(stmt)!=SQLITE_DONE){
-                return -1;
-            }return (int)sqlite3_last_insert_rowid(db);
+            sqlite3_bind_int(stmt,4,id);
+            sqlite3_step(stmt); 
+            sqlite3_finalize(stmt);
+            return sqlite3_changes(db) > 0 ? id : -1;
         }
     return true;
 
@@ -944,7 +943,16 @@ void uinter::layout(int mode){
             SDL_FreeSurface(surf22);
             SDL_DestroyTexture(tex22);
         }
-
+        if(!s4.empty()){
+            SDL_Surface* surf47=TTF_RenderText_Solid(font,s4.c_str(),black);
+            SDL_Texture* tex47=SDL_CreateTextureFromSurface(renderer,surf47);
+            int tw47 = surf47->w;
+            int th47 = surf47->h;
+            SDL_Rect rect47={575,490,tw47,th47};
+            SDL_RenderCopy(renderer,tex47,NULL,&rect47);
+            SDL_FreeSurface(surf47);
+            SDL_DestroyTexture(tex47);
+        }
         if(!s3.empty()){
             SDL_Surface* surf33=TTF_RenderText_Solid(font,s3.c_str(),black);
             SDL_Texture* tex33=SDL_CreateTextureFromSurface(renderer,surf33);
@@ -1098,7 +1106,7 @@ void uinter::layout(int mode){
         TTF_Font *font=sdl.getFont();
         SDL_Renderer* renderer=sdl.getrender();
         SDL_Color black = {0,0,0,255};
-        SDL_Surface* surf=TTF_RenderText_Solid(font," staff name : ",black);
+        SDL_Surface* surf=TTF_RenderText_Solid(font," staff name  : ",black);
         int tw = surf->w;
         int th = surf->h;
         SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
@@ -1106,9 +1114,53 @@ void uinter::layout(int mode){
         SDL_RenderCopy(renderer,tex,NULL,&rect);
         SDL_FreeSurface(surf);
         SDL_DestroyTexture(tex);
-        sdl.drawtextarea(570,190,200,40,0,0,0);    
-    
-    
+        sdl.drawtextarea(570,190,200,40,0,0,0);
+        
+        sdl.drawtextarea(570,290,200,40,0,0,0);
+        SDL_Surface* surf87=TTF_RenderText_Solid(font," staff id  : ",black);
+        SDL_Texture* tex87=SDL_CreateTextureFromSurface(renderer,surf87);
+        int tw87 = surf87->w;
+        int th87 = surf87->h;
+        SDL_Rect rect87={350,490,tw87,th87};
+        SDL_RenderCopy(renderer,tex87,NULL,&rect87);
+        SDL_FreeSurface(surf87);
+        SDL_DestroyTexture(tex87);
+        
+        sdl.drawtextarea(570,480,200,40,0,0,0);
+
+        SDL_Surface* surf2=TTF_RenderText_Solid(font," staff age  : ",black);
+        SDL_Texture* tex2=SDL_CreateTextureFromSurface(renderer,surf2);
+        int tw2 = surf2->w;
+        int th2 = surf2->h;
+        SDL_Rect rect2={350,300,tw2,th2};
+        SDL_RenderCopy(renderer,tex2,NULL,&rect2);
+        SDL_FreeSurface(surf2);
+        SDL_DestroyTexture(tex2);
+        
+        sdl.drawtextarea(570,290,200,40,0,0,0);
+
+        
+        SDL_Surface* surf3=TTF_RenderText_Solid(font," staff position  : ",black);
+        SDL_Texture* tex3=SDL_CreateTextureFromSurface(renderer,surf3);
+        int tw3 = surf3->w;
+        int th3 = surf3->h;
+        SDL_Rect rect3={350,400,tw3,th3};
+        SDL_RenderCopy(renderer,tex3,NULL,&rect3);
+        SDL_FreeSurface(surf3);
+        SDL_DestroyTexture(tex3);
+        sdl.drawtextarea(570,390,200,40,0,0,0);
+        if(sdl.message!=""){
+            TTF_Font *font=sdl.getFont();
+            SDL_Renderer* renderer=sdl.getrender();
+            SDL_Color black = {0,0,0,255};
+            SDL_Surface* surf=TTF_RenderText_Solid(font,sdl.message.c_str(),black);
+            int tw = surf->w;
+            int th = surf->h;
+            SDL_Texture* tex=SDL_CreateTextureFromSurface(renderer,surf);
+            SDL_Rect rect={50,700,tw,th};
+            SDL_RenderCopy(renderer,tex,NULL,&rect);
+        }
+        
         if(!s1.empty()){
             SDL_Surface* surf11=TTF_RenderText_Solid(font,s1.c_str(),black);
             SDL_Texture* tex11=SDL_CreateTextureFromSurface(renderer,surf11);
@@ -1118,6 +1170,37 @@ void uinter::layout(int mode){
             SDL_RenderCopy(renderer,tex11,NULL,&rect11);
             SDL_FreeSurface(surf11);
             SDL_DestroyTexture(tex11);
+            }
+
+        if(!s2.empty()){
+            SDL_Surface* surf22=TTF_RenderText_Solid(font,s2.c_str(),black);
+            SDL_Texture* tex22=SDL_CreateTextureFromSurface(renderer,surf22);
+            int tw22 = surf22->w;
+            int th22 = surf22->h;
+            SDL_Rect rect22={575,300,tw22,th22};
+            SDL_RenderCopy(renderer,tex22,NULL,&rect22);
+            SDL_FreeSurface(surf22);
+            SDL_DestroyTexture(tex22);
+        }
+        if(!s4.empty()){
+            SDL_Surface* surf65=TTF_RenderText_Solid(font,s4.c_str(),black);
+            SDL_Texture* tex65=SDL_CreateTextureFromSurface(renderer,surf65);
+            int tw65 = surf65->w;
+            int th65 = surf65->h;
+            SDL_Rect rect65={575,490,tw65,th65};
+            SDL_RenderCopy(renderer,tex65,NULL,&rect65);
+            SDL_FreeSurface(surf65);
+            SDL_DestroyTexture(tex65);
+        }
+        if(!s3.empty()){
+            SDL_Surface* surf33=TTF_RenderText_Solid(font,s3.c_str(),black);
+            SDL_Texture* tex33=SDL_CreateTextureFromSurface(renderer,surf33);
+            int tw33 = surf33->w;
+            int th33 = surf33->h;
+            SDL_Rect rect33={575,400,tw33,th33};
+            SDL_RenderCopy(renderer,tex33,NULL,&rect33);
+            SDL_FreeSurface(surf33);
+            SDL_DestroyTexture(tex33);
         }
     }
 
@@ -1632,7 +1715,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                     else{sdl.message="author not found twin";}}
                 }
 
-                if(focused==1 && s1.length()<20) s1+=c;}}
+                if(focused==1 && s1.length()<20 && key>=SDLK_0 && key<=SDLK_9) s1+=c;}}
         if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
             if(key==SDLK_ESCAPE) {
@@ -1694,34 +1777,73 @@ void uinter::handel(SDL_Event& event,int& mode){
             if (570<event.button.x && event.button.x<770){
                 if(200<event.button.y && event.button.y<240){
                     focused=1;
-                }}}
+                }else if(300<event.button.y && event.button.y<340){
+                    focused=2;
+                }else if(400<event.button.y && event.button.y<440){
+                    focused=3;
+                }else if(480<event.button.y && event.button.y<520){
+                    focused=4;
+            }
+        }}
         if (focused!=-1){
             if(event.type==SDL_KEYDOWN){
                 SDL_Keycode key=event.key.keysym.sym;
-                char c=(char)key;
                 if (key == SDLK_BACKSPACE) {
                     if (focused==1 && !s1.empty())s1.pop_back();
+                    else if (focused==2 && !s2.empty()) s2.pop_back();
+                    else if(focused==3 && !s3.empty()) s3.pop_back();
+                    else if(focused==4 && !s4.empty()) s4.pop_back();
                 }
-                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
-                    focused=-1;
-                    mode=0;
-                    s1.clear();
-                    s2.clear();
-                    s3.clear();
-                    return;}
+                else if(key==SDLK_RETURN) {
+                    book booki;
+                    author authori(std::stoi(s4),s1,0,std::stoi(s2),s3);
+                    staff staffi;
+                    int t=db.modify(2,std::stoi(s4),booki,authori,staffi);
+                    if(t!=-1){
+                        sdl.message="book modified twin dw ";
+                    }else{
+                        sdl.message="you definetly fucked somehting up ong";
+                    }
 
-                if(focused==1 && s1.length()<20) s1+=c;}}
-        if (event.type==SDL_KEYDOWN){
-            SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+
+
+                    
                     focused=-1;
-                    mode=0;
                     s1.clear();
                     s2.clear();
                     s3.clear();
-                    return;}}
+                    s4.clear();
+                    
+                    return;
+                }
+                if (key>=32 && key<=126) {  
+                    char c=(char)key;
+                    bool shift=(event.key.keysym.mod & KMOD_SHIFT);
+                    if (shift && c>='a' && c<= 'z') {
+                        c=toupper(c);
+                    }
+                    if(focused==1 && s1.length()<20) s1+=c;
+
+                else if(focused==2 && s2.length()<20) s2+=c;
+                else if(focused==4 && s4.length()<20) s4+=c;
+                else if(focused==3 && s3.length()<20) s3+=c;}
+                
+                        }
+                
+        }if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    sdl.message.clear();
+                    mode=0;
+                    return;}
+        }
+          
+        
+
+
+
     }else if(mode==30){
         if (event.type==SDL_MOUSEBUTTONDOWN){
             if (570<event.button.x && event.button.x<770){
@@ -1815,7 +1937,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                     bool t = db.remove(3, std::stoi(s1));
                     if (t){sdl.message=" staff deleted successfully nigga dw";}
                     else{sdl.message="staff not found twin";}}}
-                if(focused==1 && s1.length()<20) s1+=c;}}
+                if(focused==1 && s1.length()<20 && key>=SDLK_0 && key<=SDLK_9) s1+=c;}}
         if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
             if(key==SDLK_ESCAPE) {
@@ -1860,7 +1982,7 @@ void uinter::handel(SDL_Event& event,int& mode){
                     s1.clear();
                     return;}
 
-                if(focused==1 && s1.length()<20) s1+=c;}}
+                if(focused==1 && s1.length()<20 && key>=SDLK_0 && key<=SDLK_9) s1+=c;}}
         if (event.type==SDL_KEYDOWN){
             SDL_Keycode key=event.key.keysym.sym;
             if(key==SDLK_ESCAPE) {
@@ -1876,34 +1998,74 @@ void uinter::handel(SDL_Event& event,int& mode){
             if (570<event.button.x && event.button.x<770){
                 if(200<event.button.y && event.button.y<240){
                     focused=1;
-                }}}
+                }else if(300<event.button.y && event.button.y<340){
+                    focused=2;
+                }else if(400<event.button.y && event.button.y<440){
+                    focused=3;
+                }else if(480<event.button.y && event.button.y<520){
+                    focused=4;
+            }
+        }}
         if (focused!=-1){
             if(event.type==SDL_KEYDOWN){
                 SDL_Keycode key=event.key.keysym.sym;
-                char c=(char)key;
                 if (key == SDLK_BACKSPACE) {
                     if (focused==1 && !s1.empty())s1.pop_back();
+                    else if (focused==2 && !s2.empty()) s2.pop_back();
+                    else if(focused==3 && !s3.empty()) s3.pop_back();
+                    else if(focused==4 && !s4.empty()) s4.pop_back();
                 }
-                else if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
-                    focused=-1;
-                    mode=0;
-                    s1.clear();
-                    s2.clear();
-                    s3.clear();
-                    return;}
+                else if(key==SDLK_RETURN) {
+                    book booki;
+                    author authori;
+                    int sal = std::stoi(s3) * 750;
+                    staff staffi(std::stoi(s4), s1, std::stoi(s3), std::stoi(s2), sal);
+                    int t=db.modify(3,std::stoi(s4),booki,authori,staffi);
+                    if(t!=-1){
+                        sdl.message="staff modified twin dw ";
+                    }else{
+                        sdl.message="you definetly fucked somehting up ong";
+                    }
 
-                if(focused==1 && s1.length()<20) s1+=c;}}
-        if (event.type==SDL_KEYDOWN){
-            SDL_Keycode key=event.key.keysym.sym;
-            if(key==SDLK_RETURN || key==SDLK_ESCAPE) {
-                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+
+
+                    
                     focused=-1;
-                    mode=0;
                     s1.clear();
                     s2.clear();
                     s3.clear();
-                    return;}}
+                    s4.clear();
+                    
+                    return;
+                }
+                if (key>=32 && key<=126) {  
+                    char c=(char)key;
+                    bool shift=(event.key.keysym.mod & KMOD_SHIFT);
+                    if (shift && c>='a' && c<= 'z') {
+                        c=toupper(c);
+                    }
+                    if(focused==1 && s1.length()<20) s1+=c;
+
+                else if(focused==2 && s2.length()<20) s2+=c;
+                else if(focused==4 && s4.length()<20) s4+=c;
+                else if(focused==3 && s3.length()<20) s3+=c;}
+                
+                        }
+                
+        }if (event.type==SDL_KEYDOWN){
+            SDL_Keycode key=event.key.keysym.sym;
+            if(key==SDLK_ESCAPE) {
+                    std::cout<<"Saving: "<<s1<<" by "<<s2<<", "<<s3<<" pages"<<std::endl;
+                    focused=-1;
+                    sdl.message.clear();
+                    mode=0;
+                    return;}
+        }
+          
+        
+
+
+
     }
                 
             
