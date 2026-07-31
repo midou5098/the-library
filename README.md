@@ -84,9 +84,6 @@ The main loop routes the UI through integer modes for each area of the system:
 | `20-23` | Author add, delete, search, and modify screens. |
 | `30-33` | Staff add, delete, search, and modify screens. |
 
-## Implementation Notes
-
-The project keeps most implementation in `headers.h`. That includes the model classes, SQLite helper methods, SDL initialization wrapper, and UI class. It is compact for experimentation and easy to inspect, but a future production version would benefit from splitting database, models, and UI into separate translation units.
 
 ## Known Limitations
 
